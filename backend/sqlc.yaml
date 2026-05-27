@@ -1,0 +1,76 @@
+package: db
+sql_package: sqlc-db
+schema:
+  - ../migrations
+queries: queries/
+engine: postgresql
+emit_json_tags: true
+emit_prepared_queries: false
+emit_interface: true
+emit_empty_slices: true
+output_querier_file_name: querier.go
+overrides:
+  - column: users.id
+    go_type:
+      type: "UUID"
+      package: "github.com/google/uuid"
+  - column: users.telegram_id
+    go_type: "int64"
+  - column: trees.id
+    go_type:
+      type: "UUID"
+      package: "github.com/google/uuid"
+  - column: trees.owner_id
+    go_type:
+      type: "UUID"
+      package: "github.com/google/uuid"
+  - column: persons.id
+    go_type:
+      type: "UUID"
+      package: "github.com/google/uuid"
+  - column: persons.tree_id
+    go_type:
+      type: "UUID"
+      package: "github.com/google/uuid"
+  - column: persons.birth_date
+    go_type:
+      type: "Time"
+      package: "time"
+      pointer: true
+  - column: persons.death_date
+    go_type:
+      type: "Time"
+      package: "time"
+      pointer: true
+  - column: relations.id
+    go_type:
+      type: "UUID"
+      package: "github.com/google/uuid"
+  - column: relations.tree_id
+    go_type:
+      type: "UUID"
+      package: "github.com/google/uuid"
+  - column: relations.person1_id
+    go_type:
+      type: "UUID"
+      package: "github.com/google/uuid"
+  - column: relations.person2_id
+    go_type:
+      type: "UUID"
+      package: "github.com/google/uuid"
+  - column: users.created_at
+    go_type:
+      type: "Time"
+      package: "time"
+  - column: trees.created_at
+    go_type:
+      type: "Time"
+      package: "time"
+  - column: persons.created_at
+    go_type:
+      type: "Time"
+      package: "time"
+  - column: relations.created_at
+    go_type:
+      type: "Time"
+      package: "time"
