@@ -93,15 +93,23 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"status": "ok"})
 	})
 
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = cfg.ServerPort
+	}
+	if port == "" {
+		port = "8080"
+	}
+
 	// Server
 	srv := &http.Server{
-		Addr:    ":" + cfg.ServerPort,
+		Addr:    ":" + port,
 		Handler: r,
 	}
 
 	// Graceful shutdown
 	go func() {
-		log.Info().Str("port", cfg.ServerPort).Msg("server starting")
+		log.Info().Str("port", port).Msg("server starting")
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatal().Err(err).Msg("server failed")
 		}
