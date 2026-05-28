@@ -45,7 +45,7 @@ export default function App() {
     try {
       setTrees(await listTrees());
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load trees');
+      setError(err instanceof Error ? err.message : 'Не удалось загрузить деревья');
     } finally {
       setLoading(false);
     }
@@ -60,7 +60,7 @@ export default function App() {
       setView('tree');
       setSelected(data.persons[0] ?? null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load tree');
+      setError(err instanceof Error ? err.message : 'Не удалось загрузить дерево');
     } finally {
       setLoading(false);
     }
@@ -75,7 +75,7 @@ export default function App() {
         }
         await loadTrees();
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Authentication failed');
+        setError(err instanceof Error ? err.message : 'Ошибка авторизации');
       } finally {
         setLoading(false);
       }
@@ -104,7 +104,7 @@ export default function App() {
         openModal('person');
       }
     };
-    configureMainButton(view === 'trees' ? 'Create tree' : 'Add person', true, onMain);
+    configureMainButton(view === 'trees' ? 'Создать дерево' : 'Добавить человека', true, onMain);
     return () => configureMainButton('', false, onMain);
   });
 
@@ -237,15 +237,15 @@ function TreesView({
       </header>
 
       <form onSubmit={onCreate} className="flex gap-2">
-        <input className="field" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Tree title" />
+        <input className="field" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Название дерева" />
         <button className="btn-primary shrink-0" type="submit" aria-label="Создать дерево">
           <Plus size={18} />
         </button>
       </form>
 
       <section className="grid gap-3">
-        {loading && <div className="rounded-lg bg-panel p-4 text-sm text-hint">Loading...</div>}
-        {!loading && trees.length === 0 && <div className="rounded-lg bg-panel p-4 text-sm text-hint">No trees yet.</div>}
+        {loading && <div className="rounded-lg bg-panel p-4 text-sm text-hint">Загрузка...</div>}
+        {!loading && trees.length === 0 && <div className="rounded-lg bg-panel p-4 text-sm text-hint">Пока нет ни одного дерева.</div>}
         {trees.map((tree) => (
           <button key={tree.id} className="rounded-lg bg-panel p-4 text-left shadow-sm transition active:scale-[0.99]" onClick={() => onOpen(tree.id)}>
             <div className="font-semibold">{tree.title}</div>
@@ -285,14 +285,14 @@ function TreeView({
   return (
     <>
       <header className="flex items-center justify-between gap-2">
-        <button className="btn-soft w-11 px-0" onClick={onBack} aria-label="Back">
+        <button className="btn-soft w-11 px-0" onClick={onBack} aria-label="Назад">
           <ArrowLeft size={18} />
         </button>
         <div className="min-w-0 flex-1">
           <h1 className="truncate text-xl font-bold">{data.tree.title}</h1>
-          <p className="text-sm text-hint">{data.persons.length} people</p>
+          <p className="text-sm text-hint">{data.persons.length} чел.</p>
         </div>
-        <button className="btn-soft w-11 px-0" onClick={onRefresh} aria-label="Refresh">
+        <button className="btn-soft w-11 px-0" onClick={onRefresh} aria-label="Обновить">
           <RefreshCw size={18} />
         </button>
         <button className="btn-primary w-11 px-0" onClick={onAdd} aria-label="Добавить человека">
@@ -357,8 +357,8 @@ function FamilyGraph({
   return (
     <section className="relative h-[52vh] min-h-[380px] overflow-hidden rounded-lg bg-panel shadow-sm">
       <div className="absolute right-3 top-3 z-10 flex gap-2">
-        <button className="btn-soft h-9 w-9 px-0" onClick={() => zoom(-0.15)} aria-label="Zoom out">-</button>
-        <button className="btn-soft h-9 w-9 px-0" onClick={() => zoom(0.15)} aria-label="Zoom in">+</button>
+        <button className="btn-soft h-9 w-9 px-0" onClick={() => zoom(-0.15)} aria-label="Уменьшить">-</button>
+        <button className="btn-soft h-9 w-9 px-0" onClick={() => zoom(0.15)} aria-label="Увеличить">+</button>
       </div>
       <svg
         className="h-full w-full touch-none"
@@ -378,7 +378,14 @@ function FamilyGraph({
                 {node.person.first_name}
               </text>
               <text x="14" y="47" fontSize="12" fill={selected?.id === node.person.id ? '#eaf3ff' : '#6b7280'}>
-                {node.person.last_name || node.person.gender}
+                {
+                 node.person.last_name ||
+                  (node.person.gender === 'male'
+                    ? 'Муж.'
+                    : node.person.gender === 'female'
+                    ? 'Жен.'
+                    : 'Друг.')
+                }
               </text>
             </g>
           ))}
@@ -456,7 +463,7 @@ function PersonCard({
   onDelete: () => void;
 }) {
   if (!person) {
-    return <section className="rounded-lg bg-panel p-4 text-sm text-hint">Select a person to view details.</section>;
+    return <section className="rounded-lg bg-panel p-4 text-sm text-hint">Выберите человека для просмотра информации.</section>;
   }
 
   return (
@@ -497,27 +504,27 @@ function PersonModal({
   onClose: () => void;
   onSubmit: (event: FormEvent) => void;
 }) {
-  const title = mode === 'edit' ? 'Edit person' : mode === 'parent' ? 'Add parent' : mode === 'child' ? 'Add child' : mode === 'spouse' ? 'Add spouse' : 'Add person';
+  const title = mode === 'edit' ? 'Редактировать человека' : mode === 'parent' ? 'Добавить родителя' : mode === 'child' ? 'Добавить ребёнка' : mode === 'spouse' ? 'Добавить супруга' : 'Добавить человека';
 
   return (
     <div className="fixed inset-0 z-30 grid place-items-end bg-black/30 p-3">
       <form onSubmit={onSubmit} className="w-full max-w-lg rounded-lg bg-panel p-4 shadow-soft">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-bold">{title}</h2>
-          <button type="button" className="btn-soft h-9 px-3" onClick={onClose}>Close</button>
+          <button type="button" className="btn-soft h-9 px-3" onClick={onClose}>Закрыть</button>
         </div>
         <div className="grid gap-3">
-          <input className="field" required value={form.first_name} onChange={(e) => setForm({ ...form, first_name: e.target.value })} placeholder="First name" />
-          <input className="field" value={form.last_name} onChange={(e) => setForm({ ...form, last_name: e.target.value })} placeholder="Last name" />
+          <input className="field" required value={form.first_name} onChange={(e) => setForm({ ...form, first_name: e.target.value })} placeholder="Имя" />
+          <input className="field" value={form.last_name} onChange={(e) => setForm({ ...form, last_name: e.target.value })} placeholder="Фамилия" />
           <select className="field" value={form.gender} onChange={(e) => setForm({ ...form, gender: e.target.value as Gender })}>
-            <option value="female">Female</option>
-            <option value="male">Male</option>
-            <option value="other">Other</option>
+            <option value="female">Жен</option>
+            <option value="male">Муж</option>
+            <option value="other">Другое</option>
           </select>
           <input className="field" type="date" value={form.birth_date} onChange={(e) => setForm({ ...form, birth_date: e.target.value })} />
           <input className="field" type="date" value={form.death_date} onChange={(e) => setForm({ ...form, death_date: e.target.value })} />
-          <input className="field" value={form.photo_url} onChange={(e) => setForm({ ...form, photo_url: e.target.value })} placeholder="Photo URL" />
-          <button className="btn-primary" type="submit">Save</button>
+          <input className="field" value={form.photo_url} onChange={(e) => setForm({ ...form, photo_url: e.target.value })} placeholder="Фото ссылка" />
+          <button className="btn-primary" type="submit">Сохранить</button>
         </div>
       </form>
     </div>
@@ -527,6 +534,6 @@ function PersonModal({
 function formatLife(person: Person) {
   const birth = person.birth_date ? new Date(person.birth_date).getFullYear() : '';
   const death = person.death_date ? new Date(person.death_date).getFullYear() : '';
-  if (!birth && !death) return 'Dates unknown';
+  if (!birth && !death) return 'Даты неизвестны';
   return `${birth || '?'} - ${death || ''}`;
 }
