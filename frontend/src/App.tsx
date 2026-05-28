@@ -432,18 +432,63 @@ function buildLayout(persons: Person[], relations: Relation[]) {
       levels.set(relation.person2_id, shared);
     }
   });
-  
+
   const grouped = new Map<number, Person[]>();
   persons.forEach((person) => {
     const level = levels.get(person.id) ?? 0;
     grouped.set(level, [...(grouped.get(level) ?? []), person]);
   });
 
-  const nodes = persons.map((person) => {
-    const level = levels.get(person.id) ?? 0;
-    const group = grouped.get(level) ?? [];
-    const index = group.findIndex((item) => item.id === person.id);
-    return { person, x: index * 176, y: level * 130 };
+  const spouseMap = new Map<string, string>();
+
+  relations
+    .filter((r) => r.relation_type === 'spouse')
+    .forEach((r) => {
+      spouseMap.set(r.person1_id, r.person2_id);
+      spouseMap.set(r.person2_id, r.person1_id);
+    });
+
+  const positioned = new Set<string>();
+
+  const nodes: {
+    person: Person;
+    x: number;
+    y: number;
+  }[] = [];
+
+  grouped.forEach((group, level) => {
+    let x = 0;
+
+    for (const person of group) {
+      if (positioned.has(person.id)) continue;
+
+      const spouseId = spouseMap.get(person.id);
+      const spouse = spouseId
+        ? byID.get(spouseId)
+        : null;
+
+      nodes.push({
+        person,
+        x,
+        y: level * 130,
+      });
+
+      positioned.add(person.id);
+
+      if (spouse && !positioned.has(spouse.id)) {
+        nodes.push({
+          person: spouse,
+          x: x + 176,
+          y: level * 130,
+        });
+
+        positioned.add(spouse.id);
+
+        x += 352;
+      } else {
+        x += 176;
+      }
+    }
   });
 
   const nodeMap = new Map(nodes.map((node) => [node.person.id, node]));
