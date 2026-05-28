@@ -228,8 +228,8 @@ function TreesView({
     <>
       <header className="flex items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">Family trees</h1>
-          <p className="text-sm text-hint">Create a tree and add relatives.</p>
+          <h1 className="text-2xl font-bold">Семейные деревья</h1>
+          <p className="text-sm text-hint">Создай дерево и добавь родственников.</p>
         </div>
         <div className="grid h-12 w-12 place-items-center rounded-lg bg-panel shadow-soft">
           <GitBranch className="text-accent" />
@@ -238,7 +238,7 @@ function TreesView({
 
       <form onSubmit={onCreate} className="flex gap-2">
         <input className="field" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Tree title" />
-        <button className="btn-primary shrink-0" type="submit" aria-label="Create tree">
+        <button className="btn-primary shrink-0" type="submit" aria-label="Создать дерево">
           <Plus size={18} />
         </button>
       </form>
@@ -295,7 +295,7 @@ function TreeView({
         <button className="btn-soft w-11 px-0" onClick={onRefresh} aria-label="Refresh">
           <RefreshCw size={18} />
         </button>
-        <button className="btn-primary w-11 px-0" onClick={onAdd} aria-label="Add person">
+        <button className="btn-primary w-11 px-0" onClick={onAdd} aria-label="Добавить человека">
           <UserPlus size={18} />
         </button>
       </header>
@@ -472,12 +472,12 @@ function PersonCard({
         </div>
       </div>
       <div className="mt-4 grid grid-cols-2 gap-2">
-        <button className="btn-soft" onClick={onAddParent}>Add parent</button>
-        <button className="btn-soft" onClick={onAddChild}>Add child</button>
-        <button className="btn-soft" onClick={onAddSpouse}>Add spouse</button>
-        <button className="btn-soft" onClick={onEdit}>Edit</button>
+        <button className="btn-soft" onClick={onAddParent}>Добавить родителя</button>
+        <button className="btn-soft" onClick={onAddChild}>Добавить ребенка</button>
+        <button className="btn-soft" onClick={onAddSpouse}>Добавить супруга</button>
+        <button className="btn-soft" onClick={onEdit}>Изменить</button>
         <button className="btn-soft col-span-2 text-red-600" onClick={onDelete}>
-          <Trash2 size={16} /> Delete
+          <Trash2 size={16} /> Удалить
         </button>
       </div>
     </section>
