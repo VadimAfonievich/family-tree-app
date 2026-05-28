@@ -416,6 +416,23 @@ function buildLayout(persons: Person[], relations: Relation[]) {
 
   (roots.length ? roots : persons).forEach((person) => visit(person.id, 0));
 
+  relations
+  .filter((r) => r.relation_type === 'spouse')
+  .forEach((relation) => {
+    const level1 = levels.get(relation.person1_id);
+    const level2 = levels.get(relation.person2_id);
+
+    if (level1 !== undefined && level2 === undefined) {
+      levels.set(relation.person2_id, level1);
+    } else if (level2 !== undefined && level1 === undefined) {
+      levels.set(relation.person1_id, level2);
+    } else if (level1 !== undefined && level2 !== undefined) {
+      const shared = Math.min(level1, level2);
+      levels.set(relation.person1_id, shared);
+      levels.set(relation.person2_id, shared);
+    }
+  });
+  
   const grouped = new Map<number, Person[]>();
   persons.forEach((person) => {
     const level = levels.get(person.id) ?? 0;
